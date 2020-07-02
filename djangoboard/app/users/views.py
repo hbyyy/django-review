@@ -1,9 +1,10 @@
-from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth.hashers import make_password
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 # Create your views here.
 from django.views.generic.base import View
 
+from users.forms import LoginForm
 from users.models import TestUser
 
 
@@ -42,20 +43,18 @@ class Register(View):
 #         self.context
 
 def login(request):
-    if request.method == 'GET':
-        return render(request, 'users/login.html')
-    elif request.method == 'POST':
-        context = {}
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
-        user = TestUser.objects.get(username=username)
-        if check_password(password, user.password):
-            request.session['user'] = user.id
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            request.session['user'] = form.cleaned_data.get('user_id')
             return redirect('/')
-        else:
-            context['error'] = '비밀번호가 틀렸습니다'
-            return render(request, 'users/login.html', context)
+    else:
+        form = LoginForm()
+
+    context = {
+        'form': form
+    }
+    return render(request, 'users/login.html', context)
 
 
 def index(request):
