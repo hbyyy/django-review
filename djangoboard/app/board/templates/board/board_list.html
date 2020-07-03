@@ -16,7 +16,7 @@
                 {% for board in boards %}
                 <tr>
                     <td>{{ forloop.counter }}</td>
-                    <td>{{board.title}}</td>
+                    <td><a href="{% url 'board:board-detail' pk=board.pk %}">{{board.title}}</a></td>
                     <td>{{board.writer.username}}</td>
                     <td>{{ board.created|date:'Y - m - d'}}</td>
                 </tr>

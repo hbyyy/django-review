@@ -1,0 +1,12 @@
+{% extends 'board/base.html' %}
+{% block contents %}
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-12">
+            <h1>{{ board.title }}</h1>
+            <p>{{ board.contents }}</p>
+            <a type="button" class="btn btn-primary" href="{% url 'board:board-list' %}">뒤로</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
