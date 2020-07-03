@@ -1,0 +1,30 @@
+{% extends 'board/base.html' %}
+{% block contents %}
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-12">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="form-group">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {% ifequal field.name 'contents' %}
+                                <textarea class="form-control" name="{{ field.name }}" placeholder="{{ field.label }}"></textarea>
+                            {% else %}
+                                {{ field }}
+                            {% endifequal %}
+
+                            <ul class="list-unstyled text-danger">
+                                {% if field.errors %}
+                                    <li>{{ field.errors }}</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary">submit</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
