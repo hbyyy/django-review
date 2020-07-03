@@ -9,14 +9,19 @@
                         <div class="form-group">
                             <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                             {% ifequal field.name 'contents' %}
-                                <textarea class="form-control" name="{{ field.name }}" placeholder="{{ field.label }}"></textarea>
+                                <textarea id="{{ field.id_for_label }}" class="form-control" name="{{ field.name }}"
+                                          placeholder="{{ field.label }}"></textarea>
                             {% else %}
-                                {{ field }}
+                                <input id="{{ field.id_for_label }}" type="text" class="form-control"
+                                       name="{{ field.name }}"
+                                       placeholder="{{ field.label }}">
                             {% endifequal %}
 
                             <ul class="list-unstyled text-danger">
                                 {% if field.errors %}
-                                    <li>{{ field.errors }}</li>
+                                    {% for error in field.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
                                 {% endif %}
                             </ul>
                         </div>
