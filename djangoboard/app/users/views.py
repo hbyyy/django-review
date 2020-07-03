@@ -1,5 +1,4 @@
 from django.contrib.auth.hashers import make_password
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
 # Create your views here.
 from django.views.generic.base import View
@@ -57,11 +56,11 @@ def login(request):
     return render(request, 'users/login.html', context)
 
 
-def index(request):
-    user_id = request.session.get('user')
+def logout(request):
+    if request.session.get('user'):
+        del request.session['user']
+    return redirect('index')
 
-    if user_id:
-        user = TestUser.objects.get(pk=user_id)
-        return HttpResponse(f'id : {user.username}, email : {user.email}')
-    else:
-        return HttpResponse('home')
+
+def index(request):
+    return render(request, 'index.html')
