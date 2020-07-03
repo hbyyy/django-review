@@ -1,23 +1,21 @@
 # Create your views here.
-from django.http import Http404
-from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, DetailView, FormView
-from django.core.paginator import Paginator
+
 from board.forms import BoardForm
 from users.decorators import login_required
 from users.models import TestUser
 from .models import Board
 
 
-def board_list(request):
-    all_boards = Board.objects.order_by('-id')
-    paginator = Paginator(all_boards, 2)
-
-    page_number = request.GET.get('page')
-    boards = paginator.get_page(page_number)
-    return render(request, 'board/board_list.html', {'boards': boards})
+# def board_list(request):
+#     all_boards = Board.objects.order_by('-id')
+#     paginator = Paginator(all_boards, 2)
+#
+#     page_number = request.GET.get('page')
+#     boards = paginator.get_page(page_number)
+#     return render(request, 'board/board_list.html', {'boards': boards})
 #
 #
 # def board_detail(request, pk):
@@ -40,10 +38,11 @@ def board_list(request):
 #         form = BoardForm()
 #     return render(request, 'board/board_create.html', {'form': form})
 
-# class BoardList(ListView):
-#     template_name = 'board/board_list.html'
-#     model = Board
-#     context_object_name = 'boards'
+class BoardList(ListView):
+    template_name = 'board/board_list.html'
+    model = Board
+    paginate_by = 2
+    context_object_name = 'boards'
 
 
 class BoardDetail(DetailView):
