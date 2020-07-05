@@ -6,7 +6,7 @@ from django.views.generic import ListView, DetailView, FormView
 from board.forms import BoardForm
 from users.decorators import login_required
 from users.models import TestUser
-from .models import Board
+from .models import Board, Tag
 
 
 # def board_list(request):
@@ -41,8 +41,14 @@ from .models import Board
 class BoardList(ListView):
     template_name = 'board/board_list.html'
     model = Board
-    paginate_by = 2
+    paginate_by = 10
     context_object_name = 'boards'
+
+    def get_queryset(self):
+        if self.request.GET.get('tags'):
+            tag = Tag.objects.get(name=self.request.GET.get('tags'))
+            return tag.boards.all()
+        return super().get_queryset()
 
 
 class BoardDetail(DetailView):

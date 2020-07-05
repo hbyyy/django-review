@@ -1,10 +1,13 @@
+import re
+
 from django.db import models
 
-# Create your models here.
 from core.models import TimeStampModel
 
 
 class Board(TimeStampModel):
+    TAG_PATTERNS = re.compile(r'#(\w+)')
+
     title = models.CharField(max_length=64,
                              verbose_name='제목')
     contents = models.TextField(verbose_name='내용')
@@ -19,6 +22,17 @@ class Board(TimeStampModel):
 
     def __str__(self):
         return self.title
+
+    def _save_tags(self):
+        tags_name_all = set(re.findall(self.TAG_PATTERNS, self.contents))
+        tags = []
+        for tag in tags_name_all:
+            tags.append(Tag.objects.get_or_create(name=tag)[0])
+        self.tags.set(tags)
+
+    def save(self, *args, **kwargs):
+        super(Board, self).save(*args, **kwargs)
+        self._save_tags()
 
 
 class Tag(TimeStampModel):
